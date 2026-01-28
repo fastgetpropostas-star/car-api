@@ -24,7 +24,7 @@ def health():
 
 @app.get("/make")
 def get_one_make():
-    sql = "SELECT make_name FROM car_make ORDER BY make_name ASC LIMIT 1"
+    sql = "SELECT make_name FROM car_make ORDER BY make_name ASC"
     try:
         conn = get_conn()
         with conn.cursor() as cur:
