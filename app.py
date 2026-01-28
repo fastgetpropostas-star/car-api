@@ -22,21 +22,16 @@ def get_conn():
 def health():
     return "OK - car api"
 
-@app.get("/make")
-def get_one_make():
+@app.get("/makes")
+def get_all_makes():
     sql = "SELECT make_name FROM car_make ORDER BY make_name ASC"
     try:
         conn = get_conn()
         with conn.cursor() as cur:
             cur.execute(sql)
-            row = cur.fetchone()
+            rows = cur.fetchall()   # <-- pega todas
         conn.close()
-
-        if not row:
-            return Response("SEM_REGISTROS", mimetype="text/plain; charset=utf-8")
-
-        return Response(str(row["make_name"]), mimetype="text/plain; charset=utf-8")
+        return jsonify(rows)        # <-- retorna JSON válido
 
     except Exception as e:
-        # não expor credenciais; apenas erro resumido
         return Response(f"ERRO_DB: {type(e).__name__}", status=500, mimetype="text/plain; charset=utf-8")
