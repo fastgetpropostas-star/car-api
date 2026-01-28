@@ -31,10 +31,12 @@ def get_all_makes():
             cur.execute(sql)
             rows = cur.fetchall()
         conn.close()
-        return jsonify(rows)
+        return jsonify(rows)  # <-- jsonify está importado
+
     except Exception as e:
+        # temporário: mostra o erro real para você ver no navegador
         return Response(
-            f"ERRO_DB: {type(e).__name__}",
+            f"ERRO_DB: {type(e).__name__} | {str(e)}",
             status=500,
-            mimetype="text/plain; charset=utf-8"
+            mimetype="text/plain; charset=utf-8",
         )
