@@ -1,6 +1,6 @@
 import os
 import pymysql
-from flask import Flask, Response
+from flask import Flask, jsonify, Response
 
 app = Flask(__name__)
 
@@ -13,9 +13,9 @@ def get_conn():
         port=int(os.getenv("MYSQL_PORT", "3306")),
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor,
-        connect_timeout=8,
-        read_timeout=15,
-        write_timeout=15,
+        connect_timeout=10,
+        read_timeout=30,
+        write_timeout=30,
     )
 
 @app.get("/")
@@ -29,9 +29,12 @@ def get_all_makes():
         conn = get_conn()
         with conn.cursor() as cur:
             cur.execute(sql)
-            rows = cur.fetchall()   # <-- pega todas
+            rows = cur.fetchall()
         conn.close()
-        return jsonify(rows)        # <-- retorna JSON válido
-
+        return jsonify(rows)
     except Exception as e:
-        return Response(f"ERRO_DB: {type(e).__name__}", status=500, mimetype="text/plain; charset=utf-8")
+        return Response(
+            f"ERRO_DB: {type(e).__name__}",
+            status=500,
+            mimetype="text/plain; charset=utf-8"
+        )
